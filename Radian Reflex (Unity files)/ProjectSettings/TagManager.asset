@@ -7,6 +7,8 @@ TagManager:
   - Player Projectile
   - Enemy Projectile
   - Enemy
+  - Mine
+  - Mine Projectile
   layers:
   - Default
   - TransparentFX
