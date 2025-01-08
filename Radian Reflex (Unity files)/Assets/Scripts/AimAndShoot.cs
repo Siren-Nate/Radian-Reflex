@@ -6,10 +6,14 @@ public class AimAndShoot : MonoBehaviour
 {
     public GameObject target;
     public GameObject projectilePrefab;
+
+    AudioSource enemyAudio;
+    public AudioClip fireSound;
     
     void Start(){
         target = GameObject.FindWithTag("Player");
         InvokeRepeating("ShootProjectile", 2.0f, 1.0f);
+        enemyAudio = GetComponent<AudioSource>();
     }
 
     void Update(){
@@ -22,5 +26,9 @@ public class AimAndShoot : MonoBehaviour
 
     void ShootProjectile(){
         Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.localRotation);
+        enemyAudio.PlayOneShot(fireSound, 0.1f);
+        if(target == null){
+            CancelInvoke("ShootProjectile");
+        }
     }
 }

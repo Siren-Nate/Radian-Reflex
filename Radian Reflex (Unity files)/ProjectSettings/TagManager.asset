@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Mine
   - Mine Projectile
+  - Time Field
   layers:
   - Default
   - TransparentFX

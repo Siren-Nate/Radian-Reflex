@@ -1,25 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
     public GameObject[ ] fromTheTop;
     public GameObject[ ] fromTheBottom;
     public GameObject fromTheRight;
+    public GameObject player;
 
     public float spawnRangeX = 8.4f;
     public float spawnPointX = 8.4f;
     public float spawnRangeY = 4.4f;
     public float spawnPointY = 4.4f;
 
+    AudioSource playerAudio;
+    public AudioClip deathSound;
+    public ParticleSystem explosionParticle;
+
     void Start(){
-        StartCoroutine(SpawnWaves());
+        playerAudio = GetComponent<AudioSource>();
+        player = GameObject.Find("Player");
+        StartCoroutine("SpawnWaves");
+        InvokeRepeating("CheckPlayerDeath", 0.1f, 0.1f);
+        //explosionParticle = GetComponent<ParticleSystem>();
     }
 
     IEnumerator SpawnWaves(){
         while (true) {
-        int waveType = Random.Range(1, 3);
+        int waveType = Random.Range(1, 4);
         switch (waveType){
             case 1: //Spawn single mine or enemy moving down from the top at a random horizontal position
                 int topIndex = Random.Range(0, fromTheTop.Length);
@@ -35,11 +45,25 @@ public class SpawnManager : MonoBehaviour
                 Vector3 spawnPos3 = new Vector3(spawnPointX, Random.Range(-spawnRangeY, spawnRangeY), 0);
                 Instantiate(fromTheRight, spawnPos3, fromTheRight.transform.rotation);
                 break;
-            case 4: // 
-                
-                break;
             }
-            yield return new WaitForSeconds(Random.Range(1.0f, 3.0f));
+            if(player.activeSelf == true){
+                yield return new WaitForSeconds(Random.Range(1.0f, 3.0f));
+            }
         }
+    }
+
+    void CheckPlayerDeath(){
+        if(player == null){
+            explosionParticle.Play();
+            playerAudio.PlayOneShot(deathSound, 0.5f);
+            CancelInvoke("CheckPlayerDeath");
+            Invoke("GoBackToMenu", 5);
+        }else{
+            transform.position = player.transform.position;
+        }
+    }
+
+    void GoBackToMenu(){
+        SceneManager.LoadScene("Title Screen", LoadSceneMode.Single);
     }
 }

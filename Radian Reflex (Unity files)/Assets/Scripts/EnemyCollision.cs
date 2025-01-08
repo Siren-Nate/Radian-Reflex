@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyCollision : MonoBehaviour
 {
     public int enemyHP = 3;
+    
     //Being hit by player projectiles lowers health, colliding with the player or being hit by mine projectiles instantly kills
     void OnTriggerEnter2D(Collider2D other){
         if(other.gameObject.CompareTag("Player")){
@@ -21,6 +22,6 @@ public class EnemyCollision : MonoBehaviour
         }
         if (enemyHP < 1){
             Destroy(gameObject);
-        }
+        }   
     }
 }
